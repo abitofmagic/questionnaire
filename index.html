@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Questionário</title>
+  <style>
+    :root {
+      --bg:#0e0f12; --card:#171920; --fg:#e9edf1; --muted:#aab3bd; --accent:#4da3ff;
+      --btn:#2a2f3a; --btnHover:#333949; --pink:#ff4da6;
+    }
+    body { margin:0; padding:24px 18px; background:var(--bg); color:var(--fg);
+           font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.45; }
+    .wrap { max-width:720px; margin:0 auto }
+    .card { background:var(--card); border:1px solid #222632; border-radius:14px;
+            padding:20px; box-shadow:0 6px 20px rgba(0,0,0,.35); }
+    h1 { font-size:1.25rem; margin:0 0 2px 0 }
+    p.lead { margin:0 0 16px 0; color:var(--muted); font-size:.95rem }
+    .step { display:none } .step.active { display:block }
+    .q { font-size:1.15rem; margin:6px 0 14px }
+    .btn { width:100%; text-align:left; padding:14px 16px; margin:8px 0; background:var(--btn);
+           color:var(--fg); border:1px solid #2c3240; border-radius:10px; cursor:pointer; font-size:1rem; }
+    .btn:hover,.btn:focus { background:var(--btnHover); outline:none }
+    .end { text-align:center; padding:24px 0 }
+    .end .pink { color:var(--pink); font-size:1.6rem; font-weight:700; }
+    .timerBox { margin-top:10px; padding:12px; border:1px dashed #3a4356; border-radius:10px;
+                color:var(--muted); text-align:center; font-variant-numeric:tabular-nums; }
+    .small { color:var(--muted); font-size:.9rem }
+    .footer { margin-top:14px; color:var(--muted); font-size:.8rem; text-align:center }
+    a { color:var(--accent); text-decoration:none } a:hover { text-decoration:underline }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Questionário</h1>
+      <p class="lead">Escolha uma opção para avançar.</p>
+
+      <!-- q1 -->
+      <section id="q1" class="step active">
+        <div class="q">Você é formada em medicina?</div>
+        <button class="btn" onclick="go('q2')">Sim</button>
+        <button class="btn" onclick="go('q3')">Não</button>
+      </section>
+
+      <!-- q2 -->
+      <section id="q2" class="step">
+        <div class="q">A sua especialização consta na lista abaixo?</div>
+        <button class="btn" onclick="go('q4')">Tricologia</button>
+        <button class="btn" onclick="go('q3')">Neonatal</button>
+        <button class="btn" onclick="go('q3')">Dermatologia</button>
+        <button class="btn" onclick="go('q3')">Não</button>
+      </section>
+
+      <!-- q3 -->
+      <section id="q3" class="step">
+        <div class="q">Então você não é a princesa para quem eu fiz este questionário, lamento! De qualquer forma, divirta-se!</div>
+        <div id="timerBox" class="timerBox">
+          Redirecionando em <strong><span id="count">5</span></strong>…
+          <div class="small">(Se nada acontecer, <a id="fallback" href="#" target="_blank" rel="noopener">toque aqui</a>)</div>
+        </div>
+      </section>
+
+      <!-- q4 -->
+      <section id="q4" class="step">
+        <div class="q">Você teve um período em que ganhou peso e imita isso inchando as bochechas de maneira adorável?</div>
+        <button class="btn" onclick="go('q5')">Sim</button>
+        <button class="btn" onclick="go('q3')">Não</button>
+      </section>
+
+      <!-- q5 -->
+      <section id="q5" class="step">
+        <div class="q">O seu drink preferido é Aperol Spritz?</div>
+        <button class="btn" onclick="go('q6')">Sim</button>
+        <button class="btn" onclick="go('q3')">Não</button>
+      </section>
+
+      <!-- q6 -->
+      <section id="q6" class="step">
+        <div class="q">Ninguém é perfeito. Por último: você é pata no Beerpong?</div>
+        <button class="btn" onclick="go('q7')">Sim</button>
+        <button class="btn" onclick="go('q7')">Claro</button>
+        <button class="btn" onclick="go('q7')">Evidente</button>
+      </section>
+
+      <!-- q7 (final com texto rosa) -->
+      <section id="q7" class="step">
+        <div class="end">
+          <div class="pink">Então é você mesma. Vamos ter um date? :)</div>
+        </div>
+      </section>
+
+      <div class="footer"> Questionário divertido - Emi, 2025 </div>
+    </div>
+  </div>
+
+  <script>
+    const REDIRECT_URL = "https://www.youtube.com/shorts/xk9MsV9Xj3w";
+    let timerHandle = null;
+
+    function go(targetId) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      document.getElementById(targetId).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (targetId === 'q3') startCountdown();
+    }
+
+    function startCountdown() {
+      const fallback = document.getElementById('fallback');
+      const countEl = document.getElementById('count');
+      fallback.href = REDIRECT_URL;
+
+      let n = 5;
+      countEl.textContent = n;
+
+      clearInterval(timerHandle);
+      timerHandle = setInterval(() => {
+        n -= 1;
+        countEl.textContent = n;
+        if (n <= 0) {
+          clearInterval(timerHandle);
+          try { window.location.href = REDIRECT_URL; } catch (e) {}
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
